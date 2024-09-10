@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jake's Server</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #333, #666); /* Grey Gradient Background */
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            transition: opacity 1s ease; /* Smooth fade out */
+        }
+
+        .loading-container {
+            text-align: center;
+        }
+
+        .main-title {
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 20px;
+            background-color: #444;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+            transition: background-color 0.5s ease; /* Smooth transition for color change */
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #3399ff; /* Lighter Blue Progress */
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .percentage {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-container">
+        <div class="main-title">Jake's Server</div>
+        <div class="progress-bar" id="progressBar">
+            <div class="progress" id="progress"></div>
+            <div class="percentage" id="percentage">0%</div>
+        </div>
+        <div class="loading-text" id="loadingText">Connecting to server...</div>
+    </div>
+
+    <script>
+        const progressElement = document.getElementById('progress');
+        const percentageElement = document.getElementById('percentage');
+        const loadingTextElement = document.getElementById('loadingText');
+        const progressBarElement = document.getElementById('progressBar');
+        const bodyElement = document.body; // Reference to body for fade-out
+
+        // Loading messages to cycle through
+        const loadingMessages = [
+            'Connecting to server...',
+            'Establishing secure connection...',
+            'Encrypting connection...',
+            'Checking credentials...',
+            'Finalizing...'
+        ];
+
+        let progress = 0;
+        let messageIndex = 0;
+
+        // Function to update progress bar and percentage
+        function updateProgress() {
+            if (progress < 100) {
+                progress += 10;
+                progressElement.style.width = progress + '%';
+                percentageElement.innerText = progress + '%';
+            }
+
+            // Once the progress reaches 100%
+            if (progress >= 100) {
+                setTimeout(() => {
+                    progressElement.style.backgroundColor = '#4CAF50'; // Fade to Green
+                    loadingTextElement.innerText = 'Loading complete!';
+                    setTimeout(() => {
+                        // Start fade-out transition
+                        bodyElement.style.opacity = 0;
+                        setTimeout(() => {
+                            // Redirect to login.html after fade-out
+                            window.location.href = 'login.html';
+                        }, 1000); // Wait for fade-out transition to complete
+                    }, 600); // Show "Loading complete!" for 0.6 seconds
+                }, 600); // Delay before showing "Loading complete!"
+            }
+        }
+
+        // Function to change loading message
+        function updateLoadingMessage() {
+            if (messageIndex < loadingMessages.length) {
+                loadingTextElement.innerText = loadingMessages[messageIndex];
+                messageIndex++;
+            } else {
+                // Ensure the last message is shown until the end
+                clearInterval(messageInterval);
+            }
+        }
+
+        // Interval to update the progress bar every 0.5 seconds
+        const progressInterval = setInterval(updateProgress, 500);
+
+        // Calculate the interval time for messages to display for 0.6-0.7 seconds
+        const messageDuration = 600 + Math.random() * 100; // Random duration between 0.6 and 0.7 seconds
+        const messageInterval = setInterval(updateLoadingMessage, messageDuration);
+        
+        // Adjust message interval based on total number of messages and duration
+        setTimeout(() => {
+            clearInterval(messageInterval);
+            updateLoadingMessage(); // Ensure the last message is displayed properly
+        }, (loadingMessages.length - 1) * messageDuration + 600); // Total duration for message changes
+    </script>
+</body>
+</html>

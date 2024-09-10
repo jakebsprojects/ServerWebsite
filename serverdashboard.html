@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Dashboard - Jake's Server</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #333, #666); /* Grey Gradient Background */
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Changed from center to move content to the top */
+            min-height: 100vh;
+            overflow-y: auto; /* Allow vertical scrolling */
+            position: relative;
+            text-align: center;
+            opacity: 0; /* Start hidden for fade-in effect */
+            transition: opacity 1s ease; /* Smooth fade-in transition */
+        }
+
+        /* Top bar styling */
+        .top-bar {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            width: 90%;
+        }
+
+        .time {
+            font-size: 18px;
+        }
+
+        /* Title Styling */
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 30px; /* Adds some space at the top */
+        }
+
+        /* Button Container Styling */
+        .button-container {
+            margin-top: 30px; /* Space between title and buttons */
+            width: 80%;
+            display: flex;
+            justify-content: center; /* Center the buttons */
+            gap: 10px; /* Space between buttons */
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Button Colors */
+        .shutdown {
+            background-color: #ff4d4d; /* Red for Shut Down */
+            color: white;
+        }
+
+        .restart {
+            background-color: #3399ff; /* Blue for Restart */
+            color: white;
+        }
+
+        .update {
+            background-color: #00cc00; /* Green for Update */
+            color: white;
+        }
+
+        /* Button Hover Effects */
+        .action-button:hover {
+            transform: scale(1.05);
+        }
+
+        .action-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Container for the three columns */
+        .dashboard-container {
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin-top: 40px; /* Moved closer to the buttons */
+        }
+
+        /* Column styling */
+        .column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .circle {
+            width: 120px;
+            height: 120px;
+            border: 5px solid #00ff00; /* Green circle */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* Label styling */
+        .label {
+            font-size: 20px;
+            color: #cccccc;
+        }
+
+        /* Graph container styling */
+        .graph-container {
+            width: 80%;
+            margin-top: 40px; /* Space between circles and graphs */
+        }
+
+        .graph-wrapper {
+            width: 100%;
+            margin-bottom: 20px; /* Space between graphs */
+            padding: 20px;
+            background-color: #444; /* Darker background for the container */
+            border-radius: 8px; /* Rounded corners */
+        }
+
+        .graph {
+            width: 100%;
+            height: 250px; /* Adjust height to be smaller */
+        }
+    </style>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="time" id="time"></div>
+    </div>
+
+    <!-- Title -->
+    <div class="main-title">Server Dashboard</div>
+
+    <!-- Button Container -->
+    <div class="button-container">
+        <button class="action-button shutdown">Shut Down Server</button>
+        <button class="action-button restart">Restart Server</button>
+        <button class="action-button update">Update Files</button>
+    </div>
+
+    <!-- Dashboard Container with 3 Columns -->
+    <div class="dashboard-container">
+        <!-- Ping Column -->
+        <div class="column">
+            <div class="circle">1</div>
+            <div class="label">Ping</div>
+        </div>
+
+        <!-- Temperature Column -->
+        <div class="column">
+            <div class="circle">36</div>
+            <div class="label">Temperature</div>
+        </div>
+
+        <!-- Server Status Column -->
+        <div class="column">
+            <div class="circle">Online</div>
+            <div class="label">Server Status</div>
+        </div>
+    </div>
+
+    <!-- Graphs Container -->
+    <div class="graph-container">
+        <div class="graph-wrapper">
+            <canvas id="pingChart" class="graph"></canvas>
+        </div>
+        <div class="graph-wrapper">
+            <canvas id="temperatureChart" class="graph"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Function to update time
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const currentTime = now.toLocaleTimeString('en-GB', options);
+            document.getElementById('time').innerText = `Time: ${currentTime}`;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call to set the time immediately
+
+        // Fade-in effect
+        document.body.style.opacity = 1;
+
+        // Function to generate random data
+        function generateRandomData() {
+            return Array.from({ length: 10 }, () => Math.floor(Math.random() * 100));
+        }
+
+        // Initialize Ping Chart
+        const pingCtx = document.getElementById('pingChart').getContext('2d');
+        const pingChart = new Chart(pingCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 10 }, (_, i) => i + 1),
+                datasets: [{
+                    label: 'Ping',
+                    data: generateRandomData(),
+                    borderColor: '#3399ff',
+                    backgroundColor: 'rgba(51, 153, 255, 0.2)',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Initialize Temperature Chart
+        const temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
+        const temperatureChart = new Chart(temperatureCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 10 }, (_, i) => i + 1),
+                datasets: [{
+                    label: 'Temperature',
+                    data: generateRandomData(),
+                    borderColor: '#00cc00',
+                    backgroundColor: 'rgba(0, 204, 0, 0.2)',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Function to update charts with random data
+        function updateCharts() {
+            const newPingData = generateRandomData();
+            const newTemperatureData = generateRandomData();
+
+            pingChart.data.datasets[0].data = newPingData;
+            temperatureChart.data.datasets[0].data = newTemperatureData;
+
+            pingChart.update();
+            temperatureChart.update();
+        }
+
+        // Update charts every second
+        setInterval(updateCharts, 1000);
+    </script>
+
+</body>
+</html>
+    

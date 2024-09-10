@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Dashboard - Jake's Server</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #333, #666); /* Grey Gradient Background */
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            overflow-y: auto; /* Allow vertical scrolling */
+            position: relative;
+            text-align: center;
+            opacity: 0; /* Start hidden for fade-in effect */
+            transition: opacity 1s ease; /* Smooth fade-in transition */
+        }
+
+        /* Top bar styling */
+        .top-bar {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            width: 90%;
+        }
+
+        .time {
+            font-size: 18px;
+        }
+
+        /* Title Styling */
+        .main-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin-top: 30px; /* Adds some space at the top */
+        }
+
+        /* Software Container */
+        .software-container {
+            width: 80%;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .software-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #444;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .software-name {
+            font-size: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            transition: color 0.3s ease;
+        }
+
+        .software-name:hover {
+            color: #3399ff; /* Blue color on hover */
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            margin-left: 10px;
+        }
+
+        /* Button Colors */
+        .restart {
+            background-color: #3399ff; /* Blue for Restart */
+            color: white;
+        }
+
+        .disable {
+            background-color: #ff4d4d; /* Red for Disable */
+            color: white;
+        }
+
+        .enable {
+            background-color: #00cc00; /* Green for Enable */
+            color: white;
+        }
+
+        /* Button Hover Effects */
+        .action-button:hover {
+            transform: scale(1.05);
+        }
+
+        .action-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="time" id="time"></div>
+    </div>
+
+    <!-- Title -->
+    <div class="main-title">Software Dashboard</div>
+
+    <!-- Software Container -->
+    <div class="software-container">
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/Weather%20Alerts" class="software-name" target="_blank">Weather Alerts</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/FPL%20Alerts" class="software-name" target="_blank">FPL Alerts</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/FPL%20Alerts" class="software-name" target="_blank">Network Monitor</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/FPL%20Alerts" class="software-name" target="_blank">API Systems</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/FPL%20Alerts" class="software-name" target="_blank">Pro Clubs Search</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/FPL%20Alerts" class="software-name" target="_blank">EA FC Marketplace</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/FPL%20Alerts" class="software-name" target="_blank">Rust Cheater Checker</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+
+        <!-- Software Item -->
+        <div class="software-item">
+            <a href="https://placeholder.com/DropMaster" class="software-name" target="_blank">DropMaster</a>
+            <div>
+                <button class="action-button restart">Restart</button>
+                <button class="action-button disable" onclick="toggleButton(this)">Disable</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to update time
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const currentTime = now.toLocaleTimeString('en-GB', options);
+            document.getElementById('time').innerText = `Time: ${currentTime}`;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call to set the time immediately
+
+        // Fade-in effect
+        document.body.style.opacity = 1;
+
+        // Function to toggle Disable/Enable button
+        function toggleButton(button) {
+            if (button.innerText === "Disable") {
+                button.innerText = "Enable";
+                button.classList.remove("disable");
+                button.classList.add("enable");
+            } else {
+                button.innerText = "Disable";
+                button.classList.remove("enable");
+                button.classList.add("disable");
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Jake's Server</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #333, #666); /* Grey Gradient Background */
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            opacity: 0; /* Start hidden for fade-in effect */
+            transition: opacity 1s ease; /* Smooth fade-in transition */
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+        }
+
+        .time {
+            font-size: 18px;
+        }
+
+        .main-title {
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: white;
+        }
+
+        .login-container {
+            background-color: rgba(50, 50, 50, 0.9); /* Darker grey with slight transparency */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            text-align: left;
+            position: relative;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .form-group button {
+            background-color: #3399ff; /* Lighter Blue Button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #007bff; /* Darker Blue on Hover */
+        }
+
+        .remember-me {
+            margin-top: 10px;
+        }
+
+        .attempts-message {
+            margin-top: 10px;
+            color: #ffcccc; /* Light red color for the warning message */
+            font-size: 16px;
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-title">Jake's Server</div>
+
+    <div class="header">
+        <div class="time" id="time"></div>
+    </div>
+
+    <div class="login-container">
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group remember-me">
+                <label><input type="checkbox" id="rememberMe"> Remember me</label>
+            </div>
+            <div class="form-group">
+                <button type="submit">Login</button>
+            </div>
+            <div class="attempts-message" id="attemptsMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        // Function to update time
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const currentTime = now.toLocaleTimeString('en-GB', options);
+            document.getElementById('time').innerText = `Time: ${currentTime}`;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call to set the time immediately
+
+        // Fade-in effect
+        document.body.style.opacity = 1;
+
+        // Variables to track login attempts
+        let failedAttempts = 0;
+        const maxAttempts = 4;
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get the input values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Get the attempts message element
+            const attemptsMessage = document.getElementById('attemptsMessage');
+
+            // Check credentials
+            if (username === 'Admin' && password === 'AdminLogin') {
+                // Redirect to Dashboard.html if credentials are correct
+                window.location.href = 'dashboard.html';
+            } else {
+                failedAttempts++;
+                const attemptsLeft = maxAttempts - failedAttempts;
+
+                if (failedAttempts >= maxAttempts) {
+                    // Redirect to Blocked.html after 4 or more failed attempts
+                    window.location.href = 'blocked.html';
+                } else {
+                    // Display the attempts message only after at least 2 failed attempts
+                    if (failedAttempts >= 2) {
+                        attemptsMessage.textContent = `Incorrect credentials. You have ${attemptsLeft} attempts left.`;
+                        attemptsMessage.style.display = 'block';
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blocked - Jake's Server</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(to bottom, #333, #666); /* Grey Gradient Background */
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            opacity: 0; /* Start hidden for fade-in effect */
+            transition: opacity 1s ease; /* Smooth fade-in transition */
+        }
+
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+        }
+
+        .time {
+            font-size: 18px;
+        }
+
+        .main-title {
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .blocked-container {
+            background-color: rgba(50, 50, 50, 0.9); /* Darker grey with slight transparency */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 400px;
+            text-align: left;
+        }
+
+        .blocked-container h1 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .blocked-container p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-title">Jake's Server</div>
+
+    <div class="blocked-container">
+        <h1>This device has been blocked</h1>
+        <p>Your device has been flagged as a suspicious device. This may be because of a VPN, entering the wrong password multiple times, a location blocker, or bot-like behavior. This device has now been blacklisted from entering the site indefinitely. This is a hardware ban, not an IP ban.</p>
+    </div>
+
+    <div class="footer">
+        <div class="time" id="time"></div>
+    </div>
+
+    <script>
+        // Function to update time
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const currentTime = now.toLocaleTimeString('en-GB', options);
+            document.getElementById('time').innerText = `Time: ${currentTime}`;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call to set the time immediately
+
+        // Fade-in effect
+        document.body.style.opacity = 1;
+    </script>
+
+</body>
+</html>
